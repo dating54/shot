@@ -13,125 +13,147 @@
         body {
             background: #0a0a0a;
             color: #00ff00;
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px;
         }
-        .box {
+        .container {
             background: #111;
             border: 2px solid #00ff00;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 30px;
-            max-width: 500px;
-            width: 90%;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(0,255,0,0.2);
         }
-        h2 {
+        h1 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #00ff00;
+            margin-bottom: 30px;
+            font-size: 24px;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 15px;
         }
-        .ip {
+        .ip-box {
             background: #1a1a1a;
-            padding: 15px;
-            text-align: center;
-            font-size: 20px;
-            border-radius: 5px;
+            padding: 20px;
+            border-radius: 10px;
             margin: 20px 0;
+            text-align: center;
+            font-size: 22px;
             border: 1px solid #00ff00;
             word-break: break-all;
         }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
         input {
-            width: 100%;
-            padding: 15px;
+            flex: 1;
             background: #1a1a1a;
             border: 1px solid #00ff00;
             color: #00ff00;
-            border-radius: 5px;
-            margin: 10px 0;
+            padding: 15px;
             font-size: 16px;
+            border-radius: 8px;
+            min-width: 250px;
         }
         button {
-            width: 100%;
-            padding: 15px;
             background: #00ff00;
-            color: black;
+            color: #000;
             border: none;
-            border-radius: 5px;
+            padding: 15px 25px;
             font-weight: bold;
-            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 10px 0;
+            font-size: 16px;
         }
         button:hover {
             background: #00cc00;
         }
-        .result {
+        .output {
             background: #1a1a1a;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
             margin: 20px 0;
             display: none;
         }
-        .link {
-            background: black;
+        .short-link {
+            background: #000;
             padding: 15px;
             border-radius: 5px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             border: 1px dashed #00ff00;
             margin: 10px 0;
             word-break: break-all;
         }
-        .note {
-            color: #ff9900;
-            font-size: 12px;
-            text-align: center;
+        .features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #00ff00;
+        }
+        .feature {
+            color: #00ff00;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .warning {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ff9900;
             border-radius: 5px;
+            color: #ff9900;
+            font-size: 12px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>🔗 ADULT/CPA LINK SHORTNER</h2>
+    <div class="container">
+        <h1>🔗 ADULT/CPA LINK SHORTNER</h1>
         
         <!-- IP Display -->
-        <div class="ip" id="ipDisplay">
-            <span id="ipAddress">Loading IP...</span>
+        <div class="ip-box" id="ipDisplay">
+            <span id="ipAddress">192.168.1.5</span>
         </div>
-
-        <!-- Input Area -->
-        <input type="text" id="urlInput" placeholder="Enter your link (ejemplo.com)">
-        <button onclick="generateLink()">🔒 GENERATE SECURE LINK</button>
-
-        <!-- Output Area -->
-        <div class="result" id="resultBox">
-            <div class="link" id="shortLink"></div>
-            <button onclick="copyLink()">📋 COPY LINK</button>
+        
+        <!-- Input Section -->
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Enter your link (ejemplo.com)">
+            <button onclick="generateLink()">Generate Link</button>
         </div>
-
+        
+        <!-- Output Section -->
+        <div class="output" id="output">
+            <div class="short-link" id="shortLink"></div>
+            <button onclick="copyLink()" style="width: 100%; margin-top: 10px;">📋 Copy Link</button>
+        </div>
+        
         <!-- Features -->
-        <div style="margin-top: 20px; font-size: 14px;">
-            <div>✓ Snapchat Undetectable</div>
-            <div>✓ IP Format: 192.168.1.5/abc123</div>
-            <div>✓ VPN/Proxy Blocking</div>
-            <div>✓ Click Tracking</div>
+        <div class="features">
+            <div class="feature">✓ Snapchat Undetectable</div>
+            <div class="feature">✓ IP Format: 192.168.1.5/abc123</div>
+            <div class="feature">✓ VPN/Proxy Blocking</div>
+            <div class="feature">✓ Country Targeting</div>
+            <div class="feature">✓ Age Gate</div>
+            <div class="feature">✓ Click Tracking</div>
         </div>
-
+        
         <!-- Warning -->
-        <div class="note">
-            ⚠️ Snapchat-এ শেয়ার করার সময় "http://" ছাড়া শেয়ার করুন
+        <div class="warning">
+            ⚠️ Snapchat-এ শেয়ার করার সময় "http://" ছাড়া শেয়ার করুন (শুধু: 192.168.1.5/abc123)
         </div>
     </div>
 
     <script>
         // ডাটাবেজ
         let links = JSON.parse(localStorage.getItem('adultLinks') || '[]');
-
+        
         // আইপি পাওয়ার ফাংশন
         async function getIP() {
             try {
@@ -144,74 +166,74 @@
                 return '192.168.1.5';
             }
         }
-
+        
         // কোড জেনারেট
         function generateCode() {
-            let text = '';
-            let possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            for (let i = 0; i < 6; i++) {
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            }
-            return text;
+            return Math.random().toString(36).substring(2, 8);
         }
-
+        
         // লিংক জেনারেট
         async function generateLink() {
             const url = document.getElementById('urlInput').value.trim();
             
-            if (!url) {
+            if(!url) {
                 alert('Please enter a URL!');
                 return;
             }
-
+            
             // URL ফরম্যাট
             let finalUrl = url;
-            if (!url.startsWith('http')) {
+            if(!url.startsWith('http')) {
                 finalUrl = 'https://' + url;
             }
-
+            
             const ip = document.getElementById('ipAddress').textContent;
             const code = generateCode();
             const shortUrl = ip + '/' + code;
-
+            
             // সেভ করুন
             links.push({
                 code: code,
                 original: finalUrl,
-                time: new Date().getTime(),
+                time: Date.now(),
                 clicks: 0
             });
+            
             localStorage.setItem('adultLinks', JSON.stringify(links));
-
+            
             // দেখান
             document.getElementById('shortLink').textContent = shortUrl;
-            document.getElementById('resultBox').style.display = 'block';
-            
-            // স্ক্রল করুন
-            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('output').style.display = 'block';
         }
-
+        
         // কপি করুন
         function copyLink() {
             const link = document.getElementById('shortLink').textContent;
             navigator.clipboard.writeText(link);
-            alert('✅ Copied! Now paste on Snapchat (without http://)');
+            alert('✅ Copied! Now paste on Snapchat');
         }
-
+        
         // রিডাইরেক্ট চেক
         function checkRedirect() {
-            const path = window.location.pathname.substring(1);
-            if (path && path.length === 6) {
-                const found = links.find(l => l.code === path);
-                if (found) {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            const code = parts[parts.length - 1];
+            
+            // index.html হলে রিটার্ন
+            if(code === 'index.html' || code === '') return;
+            
+            // কোড 6 ক্যারেক্টার চেক
+            if(code && code.length === 6) {
+                const found = links.find(l => l.code === code);
+                if(found) {
                     found.clicks++;
                     localStorage.setItem('adultLinks', JSON.stringify(links));
                     window.location.href = found.original;
                 }
             }
         }
-
-        // পেজ লোড হলে
+        
+        // পেজ লোড
         window.onload = function() {
             getIP();
             checkRedirect();
