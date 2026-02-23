@@ -3,173 +3,429 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shot - Link Shortner</title>
+    <title>IP SHORTNER</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: black;
+            background: #000;
             color: #0f0;
             font-family: 'Courier New', monospace;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
             padding: 20px;
         }
-        .box {
+        
+        .container {
+            background: #111;
             border: 2px solid #0f0;
+            border-radius: 15px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
-            border-radius: 10px;
-            text-align: center;
+            box-shadow: 0 0 30px rgba(0,255,0,0.3);
         }
+        
         h1 {
-            margin-bottom: 30px;
-            font-size: 24px;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 15px;
         }
-        .ip {
-            background: #111;
-            padding: 15px;
-            border-radius: 5px;
+        
+        .ip-box {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
             margin: 20px 0;
-            font-size: 20px;
-            border: 1px solid #0f0;
+            text-align: center;
+            border: 2px solid #0f0;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            word-break: break-all;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .ip-box::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0,255,0,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
         input {
-            width: 100%;
-            padding: 15px;
-            background: #111;
+            flex: 1;
+            background: #1a1a1a;
             border: 1px solid #0f0;
             color: #0f0;
-            border-radius: 5px;
-            margin: 10px 0;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
             padding: 15px;
-            background: #0f0;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
             font-size: 16px;
-            cursor: pointer;
-            margin: 10px 0;
+            border-radius: 8px;
+            min-width: 250px;
+            font-family: 'Courier New', monospace;
         }
+        
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #0f0;
+        }
+        
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            transition: 0.3s;
+        }
+        
         button:hover {
             background: #00cc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #0f0;
         }
-        .result {
-            background: #111;
+        
+        .output {
+            background: #1a1a1a;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
             margin: 20px 0;
             display: none;
-            word-break: break-all;
+            border: 1px solid #0f0;
         }
-        .note {
-            color: #ff9900;
-            font-size: 12px;
+        
+        .ip-link {
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px dashed #0f0;
+            margin: 15px 0;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .button-group button {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+        .features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #0f0;
+        }
+        
+        .feature {
+            color: #0f0;
+            margin: 10px 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature::before {
+            content: "▶";
+            color: #0f0;
+        }
+        
+        .warning {
             margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ff9900;
+            border-radius: 8px;
+            color: #ff9900;
+            font-size: 13px;
+            text-align: center;
+            background: rgba(255,153,0,0.1);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 10px;
+            background: #1a1a1a;
             border-radius: 5px;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>🔗 SHOT - LINK SHORTNER</h1>
+    <div class="container">
+        <h1>🌐 IP LINK SHORTNER</h1>
         
-        <div class="ip" id="ipDisplay">
-            <span id="ipAddress">192.168.1.5</span>
+        <!-- IP Display -->
+        <div class="ip-box" id="ipDisplay">
+            <span id="ipAddress">103.10.194.38</span>
         </div>
         
-        <input type="text" id="urlInput" placeholder="Enter URL (ejemplo.com)">
-        <button onclick="generateLink()">SHORT LINK</button>
-        
-        <div class="result" id="result">
-            <div style="margin-bottom: 10px;">Your short link:</div>
-            <div style="background: black; padding: 10px; border-radius: 3px;" id="shortLink"></div>
-            <button onclick="copyLink()" style="margin-top: 10px;">📋 COPY</button>
+        <!-- Stats -->
+        <div class="stats">
+            <span>🔗 <span id="totalLinks">0</span> links</span>
+            <span>👁️ <span id="totalClicks">0</span> clicks</span>
+            <span class="blink">● live</span>
         </div>
         
-        <div class="note">
-            ⚠️ Snapchat-এ শুধু কোড দিন (abc123)
+        <!-- Input -->
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Enter URL (ejemplo.com)" autocomplete="off">
+            <button onclick="generateLink()">SHORTEN</button>
+        </div>
+        
+        <!-- Output -->
+        <div class="output" id="output">
+            <div class="ip-link" id="shortLink">103.10.194.38/abc123</div>
+            <div class="button-group">
+                <button onclick="copyLink()">📋 COPY IP LINK</button>
+                <button onclick="copyCode()">🔑 COPY CODE</button>
+            </div>
+            <div style="margin-top: 15px; font-size: 12px; color: #666; text-align: center;" id="clickInfo"></div>
+        </div>
+        
+        <!-- Recent Links -->
+        <div class="features" id="recentSection" style="display: none;">
+            <div style="margin-bottom: 15px;">📁 RECENT LINKS</div>
+            <div id="recentList"></div>
+        </div>
+        
+        <!-- Features -->
+        <div class="features">
+            <div class="feature">IP Format: 103.10.194.38/abc123</div>
+            <div class="feature">Snapchat Undetectable</div>
+            <div class="feature">Real IP Address Display</div>
+            <div class="feature">Click Tracking</div>
+            <div class="feature">No HTTP/HTTPS needed</div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="warning">
+            📌 <strong>SNAPCHAT INSTRUCTION:</strong><br>
+            Share only: <strong>103.10.194.38/abc123</strong><br>
+            (No http:// or https://)
         </div>
     </div>
 
     <script>
-        let links = JSON.parse(localStorage.getItem('shotLinks') || '[]');
+        // ==================== ডাটা স্টোর ====================
+        let links = JSON.parse(localStorage.getItem('ipLinks')) || [];
+        let clickData = JSON.parse(localStorage.getItem('ipClicks')) || {};
         
-        async function getIP() {
+        // ==================== আইপি ফাংশন ====================
+        async function getRealIP() {
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 document.getElementById('ipAddress').textContent = data.ip;
                 return data.ip;
-            } catch {
-                return '192.168.1.5';
+            } catch (error) {
+                return '103.10.194.38';
             }
         }
         
+        // ==================== কোড জেনারেট ====================
         function generateCode() {
-            return Math.random().toString(36).substring(2, 8);
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
         }
         
+        // ==================== লিংক জেনারেট ====================
         async function generateLink() {
-            const url = document.getElementById('urlInput').value.trim();
-            if(!url) {
-                alert('Enter URL!');
+            const input = document.getElementById('urlInput');
+            const url = input.value.trim();
+            
+            if (!url) {
+                alert('❌ Enter a URL!');
                 return;
             }
             
+            // URL ফরম্যাট
             let finalUrl = url;
-            if(!url.startsWith('http')) {
+            if (!url.startsWith('http')) {
                 finalUrl = 'https://' + url;
             }
             
+            // আইপি ও কোড
+            const ip = document.getElementById('ipAddress').textContent;
             const code = generateCode();
-            const shortUrl = window.location.origin + window.location.pathname + code;
+            const ipLink = ip + '/' + code;
             
-            links.push({
+            // সেভ
+            const newLink = {
                 code: code,
-                url: finalUrl,
-                time: Date.now()
-            });
+                ip: ip,
+                original: finalUrl,
+                created: Date.now(),
+                clicks: 0
+            };
             
-            localStorage.setItem('shotLinks', JSON.stringify(links));
+            links.push(newLink);
+            localStorage.setItem('ipLinks', JSON.stringify(links));
             
-            document.getElementById('shortLink').textContent = shortUrl;
-            document.getElementById('result').style.display = 'block';
+            // ক্লিক ডাটা
+            if (!clickData[code]) {
+                clickData[code] = [];
+            }
+            localStorage.setItem('ipClicks', JSON.stringify(clickData));
+            
+            // দেখান
+            document.getElementById('shortLink').textContent = ipLink;
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('clickInfo').innerHTML = '🔒 0 clicks • just created';
+            
+            // আপডেট
+            updateStats();
+            updateRecent();
+            
+            // ক্লিয়ার
+            input.value = '';
         }
         
+        // ==================== কপি ফাংশন ====================
         function copyLink() {
             const link = document.getElementById('shortLink').textContent;
-            navigator.clipboard.writeText(link);
-            alert('Copied!');
+            navigator.clipboard.writeText(link).then(() => {
+                alert('✅ IP Link copied: ' + link);
+            });
         }
         
+        function copyCode() {
+            const link = document.getElementById('shortLink').textContent;
+            const code = link.split('/')[1];
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copied: ' + code + '\n\nUse: ' + document.getElementById('ipAddress').textContent + '/' + code);
+            });
+        }
+        
+        // ==================== রিসেন্ট আপডেট ====================
+        function updateRecent() {
+            if (links.length === 0) {
+                document.getElementById('recentSection').style.display = 'none';
+                return;
+            }
+            
+            const recent = links.slice(-5).reverse();
+            let html = '';
+            
+            recent.forEach(link => {
+                const date = new Date(link.created).toLocaleTimeString();
+                html += `
+                    <div style="background: #1a1a1a; padding: 10px; margin: 5px 0; border-radius: 5px; font-size: 12px; border-left: 3px solid #0f0; display: flex; justify-content: space-between;">
+                        <span><strong>${link.ip}/${link.code}</strong></span>
+                        <span style="color: #666;">${link.clicks} clicks</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('recentList').innerHTML = html;
+            document.getElementById('recentSection').style.display = 'block';
+        }
+        
+        // ==================== স্ট্যাটস আপডেট ====================
+        function updateStats() {
+            document.getElementById('totalLinks').textContent = links.length;
+            
+            let total = 0;
+            links.forEach(l => total += l.clicks || 0);
+            document.getElementById('totalClicks').textContent = total;
+        }
+        
+        // ==================== রিডাইরেক্ট চেক ====================
         function checkRedirect() {
             const path = window.location.pathname;
-            const code = path.split('/').pop();
+            const parts = path.split('/');
+            let code = parts[parts.length - 1];
             
-            if(code && code.length === 6 && code !== 'index.html') {
-                const found = links.find(l => l.code === code);
-                if(found) {
-                    window.location.href = found.url;
+            // ফিল্টার
+            if (code === 'shot' || code === '' || code === 'index.html' || code.includes('.')) {
+                return;
+            }
+            
+            console.log('Looking for code:', code);
+            
+            // খুঁজি
+            const found = links.find(l => l.code === code);
+            
+            if (found) {
+                // ক্লিক আপডেট
+                found.clicks++;
+                localStorage.setItem('ipLinks', JSON.stringify(links));
+                
+                // ক্লিক ডাটা
+                if (!clickData[code]) {
+                    clickData[code] = [];
                 }
+                clickData[code].push({
+                    time: Date.now(),
+                    ip: 'visitor',
+                    agent: navigator.userAgent
+                });
+                localStorage.setItem('ipClicks', JSON.stringify(clickData));
+                
+                console.log('Redirect to:', found.original);
+                window.location.href = found.original;
+            } else {
+                console.log('Code not found:', code);
             }
         }
         
-        window.onload = function() {
-            getIP();
+        // ==================== পেজ লোড ====================
+        window.onload = async function() {
+            await getRealIP();
             checkRedirect();
+            updateStats();
+            updateRecent();
         };
     </script>
 </body>
 </html>
- 
