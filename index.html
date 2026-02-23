@@ -1,105 +1,175 @@
-<script>
-    // ডাটাবেজ
-    let links = JSON.parse(localStorage.getItem('adultLinks') || '[]');
-    
-    // আইপি পাওয়ার ফাংশন
-    async function getIP() {
-        try {
-            const res = await fetch('https://api.ipify.org?format=json');
-            const data = await res.json();
-            document.getElementById('ipAddress').textContent = data.ip;
-            return data.ip;
-        } catch {
-            document.getElementById('ipAddress').textContent = '192.168.1.5';
-            return '192.168.1.5';
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shot - Link Shortner</title>
+    <style>
+        body {
+            background: black;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
-    }
-    
-    // কোড জেনারেট
-    function generateCode() {
-        return Math.random().toString(36).substring(2, 8);
-    }
-    
-    // লিংক জেনারেট
-    async function generateLink() {
-        const url = document.getElementById('urlInput').value.trim();
-        
-        if(!url) {
-            alert('Please enter a URL!');
-            return;
+        .box {
+            border: 2px solid #0f0;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 10px;
+            text-align: center;
         }
-        
-        // URL ফরম্যাট
-        let finalUrl = url;
-        if(!url.startsWith('http')) {
-            finalUrl = 'https://' + url;
+        h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
         }
+        .ip {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 20px;
+            border: 1px solid #0f0;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #111;
+            border: 1px solid #0f0;
+            color: #0f0;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #0f0;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #00cc00;
+        }
+        .result {
+            background: #111;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+            word-break: break-all;
+        }
+        .note {
+            color: #ff9900;
+            font-size: 12px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ff9900;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🔗 SHOT - LINK SHORTNER</h1>
         
-        // গুরুত্বপূর্ণ: GitHub Pages URL ব্যবহার করুন, আইপি না
-        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
-        const code = generateCode();
-        const shortUrl = baseUrl + code;  // এটা হবে: https://username.github.io/adult-link-shortner/abc123
+        <div class="ip" id="ipDisplay">
+            <span id="ipAddress">192.168.1.5</span>
+        </div>
         
-        // সেভ করুন
-        links.push({
-            code: code,
-            original: finalUrl,
-            time: Date.now(),
-            clicks: 0
-        });
+        <input type="text" id="urlInput" placeholder="Enter URL (ejemplo.com)">
+        <button onclick="generateLink()">SHORT LINK</button>
         
-        localStorage.setItem('adultLinks', JSON.stringify(links));
+        <div class="result" id="result">
+            <div style="margin-bottom: 10px;">Your short link:</div>
+            <div style="background: black; padding: 10px; border-radius: 3px;" id="shortLink"></div>
+            <button onclick="copyLink()" style="margin-top: 10px;">📋 COPY</button>
+        </div>
         
-        // দেখান
-        document.getElementById('shortLink').textContent = shortUrl;
-        document.getElementById('output').style.display = 'block';
+        <div class="note">
+            ⚠️ Snapchat-এ শুধু কোড দিন (abc123)
+        </div>
+    </div>
+
+    <script>
+        let links = JSON.parse(localStorage.getItem('shotLinks') || '[]');
         
-        // Snapchat-এর জন্য স্পেশাল নোট
-        document.getElementById('snapchatNote').innerHTML = '📸 Snapchat-এ শেয়ার করুন: <strong>' + code + '</strong> (শুধু এই অংশ)';
-    }
-    
-    // কপি করুন
-    function copyLink() {
-        const link = document.getElementById('shortLink').textContent;
-        navigator.clipboard.writeText(link);
-        alert('✅ Copied!');
-    }
-    
-    // Snapchat কপি
-    function copySnapchat() {
-        const link = document.getElementById('shortLink').textContent;
-        const snapchatLink = link.split('/').pop(); // শুধু abc123 অংশ নেয়
-        navigator.clipboard.writeText(snapchatLink);
-        alert('✅ Snapchat-এর জন্য কপি হয়েছে! শুধু ' + snapchatLink + ' পেস্ট করুন');
-    }
-    
-    // রিডাইরেক্ট চেক
-    function checkRedirect() {
-        const path = window.location.pathname;
-        const parts = path.split('/');
-        const code = parts[parts.length - 1];
-        
-        // index.html বা খালি হলে রিটার্ন
-        if(code === 'index.html' || code === '' || code.includes('.')) return;
-        
-        // কোড 6 ক্যারেক্টার চেক
-        if(code && code.length === 6) {
-            const found = links.find(l => l.code === code);
-            if(found) {
-                found.clicks++;
-                localStorage.setItem('adultLinks', JSON.stringify(links));
-                window.location.href = found.original;
-            } else {
-                console.log('Code not found:', code);
+        async function getIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                document.getElementById('ipAddress').textContent = data.ip;
+                return data.ip;
+            } catch {
+                return '192.168.1.5';
             }
         }
-    }
-    
-    // পেজ লোড
-    window.onload = function() {
-        getIP();
-        checkRedirect();
-    };
-</script>
+        
+        function generateCode() {
+            return Math.random().toString(36).substring(2, 8);
+        }
+        
+        async function generateLink() {
+            const url = document.getElementById('urlInput').value.trim();
+            if(!url) {
+                alert('Enter URL!');
+                return;
+            }
             
+            let finalUrl = url;
+            if(!url.startsWith('http')) {
+                finalUrl = 'https://' + url;
+            }
+            
+            const code = generateCode();
+            const shortUrl = window.location.origin + window.location.pathname + code;
+            
+            links.push({
+                code: code,
+                url: finalUrl,
+                time: Date.now()
+            });
+            
+            localStorage.setItem('shotLinks', JSON.stringify(links));
+            
+            document.getElementById('shortLink').textContent = shortUrl;
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function copyLink() {
+            const link = document.getElementById('shortLink').textContent;
+            navigator.clipboard.writeText(link);
+            alert('Copied!');
+        }
+        
+        function checkRedirect() {
+            const path = window.location.pathname;
+            const code = path.split('/').pop();
+            
+            if(code && code.length === 6 && code !== 'index.html') {
+                const found = links.find(l => l.code === code);
+                if(found) {
+                    window.location.href = found.url;
+                }
+            }
+        }
+        
+        window.onload = function() {
+            getIP();
+            checkRedirect();
+        };
+    </script>
+</body>
+</html>
  
